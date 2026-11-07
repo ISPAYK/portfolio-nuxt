@@ -8,7 +8,6 @@ useSeoMeta({
   description: 'Have a question or want to collaborate on a project? Send a message to Harell Diaz.'
 })
 
-// Form Handler Function
 const handleSubmit = () => {
   alert("Message Sent! (Integrate your mail carrier logic here)")
 }
@@ -16,10 +15,8 @@ const handleSubmit = () => {
 
 <template>
   <div class="contact-page">
-    <!-- Shared Navbar Component -->
     <Navbar />
 
-    <!-- Main Content -->
     <main>
       <section class="contact-section">
         <div class="contact-container">
@@ -73,7 +70,6 @@ const handleSubmit = () => {
       </section>
     </main>
 
-    <!-- Shared Footer Component -->
     <Footer />
   </div>
 </template>
@@ -186,3 +182,59 @@ const handleSubmit = () => {
   font-size: 2.2rem; 
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-shrink: 0; 
+}
+.social-icons span {
+  font-size: 1.2rem;
+  font-weight: 500;
+  white-space: nowrap; 
+}
+
+.social-icons a.linkedin:hover {
+  border-color: #0077B5;
+  background: rgba(0, 119, 181, 0.05);
+  box-shadow: 0 0 25px rgba(0, 119, 181, 0.5);
+  transform: translateY(-5px);
+}
+.social-icons a.github:hover {
+  border-color: #ff00bb; 
+  background: rgba(255, 0, 187, 0.05);
+  box-shadow: 0 0 25px rgba(255, 0, 187, 0.5);
+  transform: translateY(-5px);
+}
+
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 100px 5% 3rem 5%;
+    text-align: center;
+  }
+  .contact-wrapper {
+    flex-direction: column;
+    gap: 3.5rem;
+    width: 100%;
+  }
+  .contact-info {
+    width: 100%;
+  }
+  .input-box {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .btn-send {
+    width: 100%;
+  }
+  .contact-info h3 {
+    font-size: 1.5rem;
+    text-align: center;
+    border-left: none;
+    border-bottom: 2px solid #ff00bb; 
+    padding-bottom: 0.5rem;
+    display: inline-block;
+    margin: 0 auto 1.5rem auto;
+  }
+  .social-icons a {
+    padding: 1.2rem 1.5rem;
+  }
+}
+</style>
