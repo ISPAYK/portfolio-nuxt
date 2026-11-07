@@ -1,0 +1,7 @@
+<template>
+  <footer class="footer footer-center p-4 bg-base-200 text-base-content border-t border-base-300">
+    <aside>
+      <p>© 2026 My Nuxt Portfolio. All rights reserved.</p>
+    </aside>
+  </footer>
+</template>
