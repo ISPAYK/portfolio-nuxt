@@ -237,7 +237,7 @@ onBeforeUnmount(() => {
     </h1>
 
     <!-- FLOATING IMAGE: template ref instead of querySelector('.home-img') -->
-    <img ref="homeImg" class="home-img" src="/images/home.png" alt="Home" />
+    <img ref="homeImg" class="home-img" src="/images/harellmain.jpg" alt="Home" />
 
     <!-- TECH KEYS: v-for replaces querySelectorAll('.key') + addEventListener -->
     <div class="keyboard">
