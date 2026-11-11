@@ -1,332 +1,318 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 
-useHead({
-  title: 'Tech Stack | Harell Diaz'
-})
+// --- 1. TYPEWRITER SETTINGS ---
+const prefixText = "Hello! I'm"
+const nameText = 'Harell Diaz'
 
-useSeoMeta({
-  title: 'Tech Stack | Harell Diaz',
-  description: 'Technologies, programming languages, and development tools used by Harell Diaz.'
-})
+const typewriterPrefix = ref('')
+const typewriterName = ref('')
+let isTyping = false
+let typeTimeouts = []
+let pageTimeouts = [] // splash/animation timers, cleared on unmount
 
-// Reactive Modal Control
-const isModalOpen = ref(false)
-const modalContent = ref({ title: '', description: '' })
+function typeEffect(targetRef, text, speed = 100, callback = null) {
+  let i = 0
+  targetRef.value = ''
 
-const openModal = (title, description) => {
-  modalContent.value = { title, description }
-  isModalOpen.value = true
+  function typing() {
+    if (i < text.length) {
+      targetRef.value += text.charAt(i)
+      i++
+      typeTimeouts.push(setTimeout(typing, speed))
+    } else if (callback) {
+      // After the first text (prefix), run the next one (name)
+      callback()
+    }
+  }
+  typing()
 }
 
-const closeModal = (event) => {
-  if (event.target.classList.contains('modal-backdrop') || event.target.classList.contains('close-btn')) {
-    isModalOpen.value = false
+function deleteEffect(targetRef, speed = 40) {
+  let text = targetRef.value
+
+  function deleting() {
+    if (text.length > 0) {
+      text = text.substring(0, text.length - 1)
+      targetRef.value = text
+      typeTimeouts.push(setTimeout(deleting, speed))
+    } else {
+      targetRef.value = ''
+    }
+  }
+  deleting()
+}
+
+function clearAllTimeouts() {
+  typeTimeouts.forEach((t) => clearTimeout(t))
+  typeTimeouts = []
+}
+
+function startHomeAnimations() {
+  if (isTyping) return // avoid running the typing effect twice
+  isTyping = true
+
+  clearAllTimeouts()
+  typewriterPrefix.value = ''
+  typewriterName.value = ''
+
+  // Type the prefix first, then the name
+  typeEffect(typewriterPrefix, prefixText, 100, () => {
+    typeTimeouts.push(
+      setTimeout(() => {
+        typeEffect(typewriterName, nameText, 120)
+      }, 300)
+    )
+  })
+}
+
+// --- 2. SPLASH SCREEN ---
+const splashVisible = ref(true)   // controls display of #splashScreen
+const splashFadingOut = ref(false) // adds the .fade-out class
+const mainShown = ref(false)       // adds .show-main and opacity: 1
+
+// Replaces document.body.classList.remove('hidden-scroll')
+useHead({
+  bodyAttrs: {
+    class: computed(() => (splashVisible.value ? 'hidden-scroll' : ''))
+  },
+  // Replaces document.documentElement.style.setProperty(...)
+  htmlAttrs: {
+    style: '--nav-glow: #ff007f; --nav-secondary: #00d2ff;'
+  }
+})
+
+function revealMain() {
+  splashVisible.value = false
+  mainShown.value = true
+}
+
+function handleSplashScreen() {
+  if (sessionStorage.getItem('splashWatched') === 'true') {
+    revealMain()
+    // Delay so the DOM is fully rendered before typing starts
+    isTyping = false // force reset for page returns
+    pageTimeouts.push(setTimeout(startHomeAnimations, 500))
+  } else {
+    pageTimeouts.push(
+      setTimeout(() => {
+        splashFadingOut.value = true
+        pageTimeouts.push(
+          setTimeout(() => {
+            revealMain()
+            sessionStorage.setItem('splashWatched', 'true')
+
+            // Start typing after the splash has fully faded out
+            isTyping = false
+            pageTimeouts.push(setTimeout(startHomeAnimations, 300))
+          }, 800)
+        )
+      }, 2500)
+    )
   }
 }
+
+// --- 3. TECH STACK KEYS + MOBILE MODAL ---
+// The original script read these from the DOM (.key, .key-info h3/p, .keycap).
+// Now they are data. Replace the entries with the items from your techstack.html.
+const techKeys = ref([
+  { id: 1, icon: '<i class="fab fa-html5"></i>', title: 'HTML5', description: 'Semantic markup for structured, accessible pages.' },
+  { id: 2, icon: '<i class="fab fa-css3-alt"></i>', title: 'CSS3', description: 'Styling, layouts, and animations.' },
+  { id: 3, icon: '<i class="fab fa-js"></i>', title: 'JavaScript', description: 'Interactivity and application logic.' },
+  { id: 4, icon: '<i class="fab fa-vuejs"></i>', title: 'Vue 3', description: 'Reactive UI with the Composition API.' }
+])
+
+const isMobileModalOpen = ref(false)
+const selectedKey = ref(null)
+
+const hasSelectedKey = computed(() => !!selectedKey.value)
+
+function openKeyModal(key) {
+  if (!key || !key.title || !key.description) return
+  selectedKey.value = key
+  isMobileModalOpen.value = true
+}
+
+function closeMobileModal() {
+  isMobileModalOpen.value = false
+}
+
+// --- 4. CONTACT FORM ---
+const contactForm = reactive({
+  name: '',
+  email: '',
+  message: ''
+})
+
+function handleContactSubmit() {
+  alert('Message Sent! (Integrate your mail carrier logic here)')
+}
+
+// --- 5. CERTIFICATE VIEWER (switchPage) ---
+// Replace the entries with your real certificate page images.
+const certPages = ref([
+  { label: '1', src: '/images/cert-page-1.jpg' },
+  { label: '2', src: '/images/cert-page-2.jpg' }
+])
+
+const activeCertIndex = ref(0)
+const certDisplaySrc = ref(certPages.value[0]?.src ?? '')
+
+const activeCert = computed(() => certPages.value[activeCertIndex.value] ?? null)
+
+function switchPage(imageSrc, index) {
+  certDisplaySrc.value = imageSrc
+  activeCertIndex.value = index
+}
+
+// --- 6. CERTIFICATE LIGHTBOX (openModal / closeModal) ---
+const isCertModalOpen = ref(false)
+const fullImgSrc = ref('')
+
+function openModal(imageSrc) {
+  fullImgSrc.value = imageSrc
+  isCertModalOpen.value = true
+}
+
+function closeModal() {
+  isCertModalOpen.value = false
+}
+
+// --- 7. FLOATING IMAGE ANIMATION (anime.js) ---
+const homeImg = ref(null)
+let animeInstance = null
+let animeLib = null
+
+async function startFloatAnimation() {
+  if (!homeImg.value) return
+  try {
+    // npm i animejs  (v3 API, matching your original anime({...}) call)
+    const mod = await import('animejs')
+    animeLib = mod.default || mod
+    animeInstance = animeLib({
+      targets: homeImg.value,
+      translateY: [0, -15, 0],
+      duration: 3000,
+      easing: 'easeInOutQuad',
+      loop: true
+    })
+  } catch (err) {
+    console.warn('anime.js not available:', err)
+  }
+}
+
+// --- LIFECYCLE ---
+onMounted(async () => {
+  handleSplashScreen()
+  await nextTick()
+  pageTimeouts.push(setTimeout(startFloatAnimation, 3000))
+})
+
+onBeforeUnmount(() => {
+  clearAllTimeouts()
+  pageTimeouts.forEach((t) => clearTimeout(t))
+  pageTimeouts = []
+  if (animeLib && homeImg.value) animeLib.remove(homeImg.value)
+  animeInstance = null
+})
 </script>
 
 <template>
-  <div class="techstack-page">
-    <!-- Shared Navbar Component -->
-    <Navbar />
+  <!-- SPLASH SCREEN: replaces getElementById('splashScreen') + style.display/classList -->
+  <div
+    v-show="splashVisible"
+    id="splashScreen"
+    :class="{ 'fade-out': splashFadingOut }"
+  >
+    <!-- your splash content -->
+  </div>
 
-    <!-- Main Tech Stack Content -->
-    <main>
-      <section class="max-w-6xl mx-auto py-12 px-4 sm:px-6" id="tech">
-        <h2 class="text-3xl md:text-4xl font-orbitron text-center mb-2">
-          My <span class="text-[#ff00bb] drop-shadow-[0_0_10px_rgba(255,0,187,0.4)]">Tech Stack</span>
-        </h2>
-        <p class="text-center text-gray-400 mb-10 text-sm md:text-base">
-          Tap or click cards to view full details
-        </p>
+  <!-- MAIN CONTENT: replaces classList.add('show-main') + style.opacity -->
+  <div id="mainContent" :class="{ 'show-main': mainShown }" :style="{ opacity: mainShown ? 1 : 0 }">
 
-        <!-- Programming Languages -->
-        <h3 class="text-xl md:text-2xl font-orbitron mb-6 border-l-4 border-pink-500 pl-4">
-          Programming Languages
-        </h3>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-12">
-          <div 
-            class="key hover:border-pink-500" 
-            @click="openModal('Java', 'Used for object-oriented programming and building robust backend logic.')"
-          >
-            <div class="keycap"><i class="bx bxl-java icon-java"></i></div>
-            <div class="mobile-label font-orbitron">Java</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-pink-500 font-orbitron">Java</h3>
-              <p class="text-xs text-center mt-1">Robust backend logic</p>
-            </div>
-          </div>
+    <!-- TYPEWRITER: replaces element.innerHTML += char -->
+    <h1>
+      <span id="typewriter-prefix">{{ typewriterPrefix }}</span>
+      <span id="typewriter-name">{{ typewriterName }}</span>
+    </h1>
 
-          <div 
-            class="key hover:border-pink-500" 
-            @click="openModal('Python', 'Applied for scripting, data analysis, and simplifying complex automation tasks.')"
-          >
-            <div class="keycap"><i class="bx bxl-python icon-python"></i></div>
-            <div class="mobile-label font-orbitron">Python</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-pink-500 font-orbitron">Python</h3>
-              <p class="text-xs text-center mt-1">Scripting & Data Analysis</p>
-            </div>
-          </div>
+    <!-- FLOATING IMAGE: template ref instead of querySelector('.home-img') -->
+    <img ref="homeImg" class="home-img" src="/images/home.png" alt="Home" />
 
-          <div 
-            class="key hover:border-pink-500" 
-            @click="openModal('C Language', 'Foundational knowledge in memory management and systems-level programming.')"
-          >
-            <div class="keycap">
-              <img src="/images/c.png" class="w-14 h-14 md:w-16 md:h-16 object-contain" alt="C Language Logo" />
-            </div>
-            <div class="mobile-label font-orbitron">C Language</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-pink-500 font-orbitron">C Language</h3>
-              <p class="text-xs text-center mt-1">Memory management</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Web & Database -->
-        <h3 class="text-xl md:text-2xl font-orbitron mb-6 border-l-4 border-blue-500 pl-4">
-          Web & Database
-        </h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
-          <div 
-            class="key hover:border-blue-500" 
-            @click="openModal('HTML', 'Creating the structural foundation of responsive web pages.')"
-          >
-            <div class="keycap"><i class="bx bxl-html5 icon-html"></i></div>
-            <div class="mobile-label font-orbitron">HTML</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-blue-500 font-orbitron">HTML</h3>
-              <p class="text-xs text-center mt-1">Web Structure</p>
-            </div>
-          </div>
-
-          <div 
-            class="key hover:border-blue-500" 
-            @click="openModal('CSS', 'Designing modern layouts with animations, flexbox, and grid.')"
-          >
-            <div class="keycap"><i class="bx bxl-css3 icon-css"></i></div>
-            <div class="mobile-label font-orbitron">CSS</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-blue-500 font-orbitron">CSS</h3>
-              <p class="text-xs text-center mt-1">Modern Layouts</p>
-            </div>
-          </div>
-
-          <div 
-            class="key hover:border-blue-500" 
-            @click="openModal('JavaScript', 'Adding interactivity and dynamic functionality.')"
-          >
-            <div class="keycap"><i class="bx bxl-javascript icon-javascript"></i></div>
-            <div class="mobile-label font-orbitron">JavaScript</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-blue-500 font-orbitron">JavaScript</h3>
-              <p class="text-xs text-center mt-1">Interactivity</p>
-            </div>
-          </div>
-
-          <div 
-            class="key hover:border-blue-500" 
-            @click="openModal('PostgreSQL', 'Advanced relational database management system.')"
-          >
-            <div class="keycap"><i class="bx bxl-postgresql icon-postgresql"></i></div>
-            <div class="mobile-label font-orbitron">PostgreSQL</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-blue-500 font-orbitron">PostgreSQL</h3>
-              <p class="text-xs text-center mt-1">Relational DB</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tools & Version Control -->
-        <h3 class="text-xl md:text-2xl font-orbitron mb-6 border-l-4 border-green-500 pl-4">
-          Tools & Version Control
-        </h3>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          <div 
-            class="key hover:border-green-500" 
-            @click="openModal('VS Code', 'Primary code editor for development.')"
-          >
-            <div class="keycap"><i class="bx bxl-visual-studio icon-vs"></i></div>
-            <div class="mobile-label font-orbitron">VS Code</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-green-500 font-orbitron">VS Code</h3>
-              <p class="text-xs text-center mt-1">Main Code Editor</p>
-            </div>
-          </div>
-
-          <div 
-            class="key hover:border-green-500" 
-            @click="openModal('Android Studio', 'IDE for high-performance Android applications.')"
-          >
-            <div class="keycap"><i class="bx bxl-android icon-android"></i></div>
-            <div class="mobile-label font-orbitron">Android Studio</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-green-500 font-orbitron">Android Studio</h3>
-              <p class="text-xs text-center mt-1">Mobile Dev</p>
-            </div>
-          </div>
-
-          <div 
-            class="key hover:border-green-500" 
-            @click="openModal('SSMS', 'SQL Server Management Studio for database administration.')"
-          >
-            <div class="keycap">
-              <img src="/images/ssms.png" class="w-14 h-14 md:w-16 md:h-16 object-contain" alt="SSMS Logo" />
-            </div>
-            <div class="mobile-label font-orbitron">SSMS</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-green-500 font-orbitron">SSMS</h3>
-              <p class="text-xs text-center mt-1">SQL Server Admin</p>
-            </div>
-          </div>
-
-          <div 
-            class="key hover:border-green-500" 
-            @click="openModal('Oracle APEX', 'Low-code platform for building enterprise database apps.')"
-          >
-            <div class="keycap"><i class="bx bx-cloud icon-oracle"></i></div>
-            <div class="mobile-label font-orbitron">Oracle APEX</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-green-500 font-orbitron">Oracle APEX</h3>
-              <p class="text-xs text-center mt-1">Low-Code Platform</p>
-            </div>
-          </div>
-
-          <div 
-            class="key hover:border-green-500" 
-            @click="openModal('Git', 'Version control and tracking history of changes.')"
-          >
-            <div class="keycap"><i class="bx bxl-git icon-git"></i></div>
-            <div class="mobile-label font-orbitron">Git</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-green-500 font-orbitron">Git</h3>
-              <p class="text-xs text-center mt-1">Version Control</p>
-            </div>
-          </div>
-
-          <div 
-            class="key hover:border-green-500" 
-            @click="openModal('GitHub', 'Hosting repositories, cloud backup, and code collaboration.')"
-          >
-            <div class="keycap"><i class="bx bxl-github icon-github"></i></div>
-            <div class="mobile-label font-orbitron">GitHub</div>
-            <div class="key-overlay">
-              <h3 class="font-bold text-green-500 font-orbitron">GitHub</h3>
-              <p class="text-xs text-center mt-1">Collaboration</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Modal Popup Details -->
-    <div 
-      v-if="isModalOpen" 
-      class="modal-backdrop fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" 
-      @click="closeModal"
-    >
-      <div class="bg-gray-900 p-6 rounded-2xl w-full max-w-sm border border-pink-500 relative mx-4 text-center">
-        <button 
-          class="close-btn absolute top-2 right-4 text-3xl text-white hover:text-pink-500 transition" 
-          @click="closeModal"
-        >
-          &times;
-        </button>
-        <div class="mt-4 space-y-2">
-          <h3 class="font-bold text-2xl text-pink-500 font-orbitron">{{ modalContent.title }}</h3>
-          <p class="text-gray-300 text-sm leading-relaxed">{{ modalContent.description }}</p>
+    <!-- TECH KEYS: v-for replaces querySelectorAll('.key') + addEventListener -->
+    <div class="keyboard">
+      <div
+        v-for="key in techKeys"
+        :key="key.id"
+        class="key"
+        @click="openKeyModal(key)"
+      >
+        <div class="keycap" v-html="key.icon"></div>
+        <div class="key-info">
+          <h3>{{ key.title }}</h3>
+          <p>{{ key.description }}</p>
         </div>
       </div>
     </div>
 
-    <!-- Shared Footer Component -->
-    <Footer />
+    <!-- MOBILE MODAL: @click.self replaces the window click listener on the backdrop -->
+    <div
+      v-show="isMobileModalOpen"
+      id="mobileModal"
+      class="modal"
+      :style="{ display: isMobileModalOpen ? 'flex' : 'none' }"
+      @click.self="closeMobileModal"
+    >
+      <div class="modal-content">
+        <span class="close-modal" @click="closeMobileModal">&times;</span>
+        <div id="modalBody" v-if="hasSelectedKey">
+          <div style="text-align: center; margin-bottom: 15px;">
+            <div style="font-size: 5rem; display: inline-block;" v-html="selectedKey.icon"></div>
+          </div>
+          <h3 style="color: var(--nav-glow); font-size: 2.2rem; margin-bottom: 10px; text-align: center; font-family: inherit;">
+            {{ selectedKey.title }}
+          </h3>
+          <p style="color: #fff; line-height: 1.6; font-size: 1.6rem; text-align: center; font-family: inherit;">
+            {{ selectedKey.description }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE VIEWER: :class replaces classList add/remove('page-active') -->
+    <div class="cert-viewer">
+      <img id="certDisplay" :src="certDisplaySrc" alt="Certificate" @click="openModal(certDisplaySrc)" />
+      <div class="page-buttons">
+        <button
+          v-for="(page, index) in certPages"
+          :key="page.src"
+          class="page-btn"
+          :class="{ 'page-active': activeCertIndex === index }"
+          @click="switchPage(page.src, index)"
+        >
+          {{ page.label }}
+        </button>
+      </div>
+    </div>
+
+    <!-- CERT LIGHTBOX: @click.self replaces the event.target === modal check -->
+    <div
+      v-show="isCertModalOpen"
+      id="certModal"
+      class="modal"
+      :style="{ display: isCertModalOpen ? 'flex' : 'none' }"
+      @click.self="closeModal"
+    >
+      <span class="close" @click="closeModal">&times;</span>
+      <img id="imgFull" :src="fullImgSrc" alt="Certificate full view" />
+    </div>
+
+    <!-- CONTACT FORM: @submit.prevent replaces e.preventDefault() -->
+    <form class="contact-form" @submit.prevent="handleContactSubmit">
+      <input v-model="contactForm.name" type="text" placeholder="Name" required />
+      <input v-model="contactForm.email" type="email" placeholder="Email" required />
+      <textarea v-model="contactForm.message" placeholder="Message" required></textarea>
+      <button type="submit">Send</button>
+    </form>
   </div>
 </template>
-
-<style scoped>
-.font-orbitron { font-family: "Orbitron", sans-serif; }
-
-.techstack-page {
-  background-color: #0b0c10;
-  color: #fff;
-  min-height: 100vh;
-}
-
-/* LOGO COLORS */
-.icon-java { color: #f89820; }
-.icon-python { color: #3776ab; }
-.icon-html { color: #e34f26; }
-.icon-css { color: #1572b6; }
-.icon-javascript { color: #f7df1e; }
-.icon-postgresql { color: #336791; }
-.icon-vs { color: #007acc; }
-.icon-android { color: #3ddc84; }
-.icon-oracle { color: #f80000; }
-.icon-git { color: #f05032; }
-.icon-github { color: #fff; }
-
-/* KEYBOARD CARD STYLES */
-.key {
-  position: relative;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #111827;
-  border: 1px solid #374151;
-  border-radius: 1rem;
-  height: 10rem;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  gap: 0.5rem;
-}
-
-.keycap {
-  font-size: 3.5rem;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mobile-label {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #e5e7eb;
-  display: block;
-}
-
-.key-overlay { 
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  background-color: rgba(3, 7, 18, 0.95);
-  opacity: 0; 
-  transition: opacity 0.3s ease; 
-  pointer-events: none;
-}
-
-@media (min-width: 769px) {
-  .mobile-label { display: none; }
-  .key:hover .key-overlay { opacity: 1; }
-  .key:hover .keycap { opacity: 0.1; transform: scale(0.9); }
-}
-
-@media (max-width: 768px) {
-  .key {
-    height: 8.5rem;
-  }
-  .keycap {
-    font-size: 2.8rem;
-  }
-  .key-overlay { display: none !important; }
-}
-</style>

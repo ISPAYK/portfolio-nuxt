@@ -3,89 +3,65 @@ useHead({
   title: 'Contact | Harell Diaz'
 })
 
-useSeoMeta({
-  title: 'Contact | Harell Diaz',
-  description: 'Have a question or want to collaborate on a project? Send a message to Harell Diaz.'
+const form = reactive({
+  fullName: '',
+  email: '',
+  mobile: '',
+  subject: '',
+  message: ''
 })
 
-const handleSubmit = () => {
-  alert("Message Sent! (Integrate your mail carrier logic here)")
+function handleSubmit() {
+  alert('Message Sent! (Integrate your mail carrier logic here)')
 }
 </script>
 
 <template>
-  <div class="contact-page">
-    <Navbar />
+  <section class="contact-section">
+    <div class="contact-container">
+      <h2 class="text-3xl md:text-5xl font-orbitron font-bold mb-3">Get In <span class="text-[#ff00bb]">Touch</span></h2>
+      <p class="text-gray-400 max-w-xl mx-auto md:mx-0 text-sm md:text-base">Have a question or want to collaborate on a project? Send me a message!</p>
 
-    <main>
-      <section class="contact-section">
-        <div class="contact-container">
-          <h2 class="text-3xl md:text-5xl font-orbitron font-bold mb-3">
-            Get In <span class="text-[#ff00bb]">Touch</span>
-          </h2>
-          <p class="text-gray-400 max-w-xl mx-auto md:mx-0 text-sm md:text-base">
-            Have a question or want to collaborate on a project? Send me a message!
-          </p>
+      <div class="contact-wrapper">
+        <form action="#" class="contact-form" @submit.prevent="handleSubmit">
+          <div class="input-box">
+            <input v-model="form.fullName" type="text" placeholder="Full Name" required>
+            <input v-model="form.email" type="email" placeholder="Email Address" required>
+          </div>
+          <div class="input-box">
+            <input v-model="form.mobile" type="number" placeholder="Mobile Number">
+            <input v-model="form.subject" type="text" placeholder="Email Subject">
+          </div>
+          <textarea v-model="form.message" name="message" placeholder="Your Message" required></textarea>
 
-          <div class="contact-wrapper">
-            <form @submit.prevent="handleSubmit" class="contact-form">
-              <div class="input-box">
-                <input type="text" placeholder="Full Name" required />
-                <input type="email" placeholder="Email Address" required />
-              </div>
-              <div class="input-box">
-                <input type="number" placeholder="Mobile Number" />
-                <input type="text" placeholder="Email Subject" />
-              </div>
-              <textarea name="message" placeholder="Your Message" required></textarea>
-              
-              <button type="submit" class="btn-send font-orbitron">Send Message</button>
-            </form>
+          <button type="submit" class="btn-send font-orbitron">Send Message</button>
+        </form>
 
-            <div class="contact-info text-left">
-              <h3 class="font-orbitron font-bold text-xl border-l-4 border-[#ff00bb] pl-3">
-                Connect with me
-              </h3>
-              <div class="social-icons">
-                <a 
-                  href="https://www.linkedin.com/in/harell-diaz-78494b40a" 
-                  class="linkedin" 
-                  target="_blank"
-                >
-                  <div class="icon text-blue-400"><i class="bx bxl-linkedin"></i></div>
-                  <span>LinkedIn</span>
-                </a>
-                <a 
-                  href="https://github.com/ISPAYK" 
-                  class="github" 
-                  target="_blank"
-                >
-                  <div class="icon text-white"><i class="bx bxl-github"></i></div>
-                  <span>GitHub</span>
-                </a>
-              </div>
-            </div>
+        <div class="contact-info text-left">
+          <h3 class="font-orbitron font-bold text-xl border-l-4 border-[#ff00bb] pl-3">Connect with me</h3>
+          <div class="social-icons">
+            <a href="https://www.linkedin.com/in/harell-diaz-78494b40a" class="linkedin" target="_blank" rel="noopener noreferrer">
+              <div class="icon text-blue-400"><i class="bx bxl-linkedin"></i></div>
+              <span>LinkedIn</span>
+            </a>
+            <a href="https://github.com/ISPAYK" class="github" target="_blank" rel="noopener noreferrer">
+              <div class="icon text-white"><i class="bx bxl-github"></i></div>
+              <span>GitHub</span>
+            </a>
           </div>
         </div>
-      </section>
-    </main>
-
-    <Footer />
-  </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <style scoped>
 .font-orbitron { font-family: "Orbitron", sans-serif; }
 
-.contact-page {
-  background-color: #0b0c10;
-  color: #fff;
-  min-height: 100vh;
-}
-
+/* --- CONTACT STRUCTURE ADJUSTMENTS --- */
 .contact-section {
-  padding: 60px 10% 4rem 10%;
-  max-width: 1300px; 
+  padding: 100px 10% 4rem 10%;
+  max-width: 1300px; /* was the invalid property "max-w" in the legacy file */
   margin: 0 auto;
 }
 .contact-container {
@@ -93,7 +69,7 @@ const handleSubmit = () => {
 }
 .contact-wrapper {
   display: flex;
-  gap: 5rem; 
+  gap: 5rem;
   margin-top: 3rem;
   align-items: flex-start;
 }
@@ -147,7 +123,7 @@ const handleSubmit = () => {
 }
 
 .contact-info {
-  flex: 1; 
+  flex: 1;
   width: 100%;
 }
 .contact-info h3 {
@@ -156,6 +132,7 @@ const handleSubmit = () => {
   margin-bottom: 2rem;
 }
 
+/* --- HIGH STABILITY SOCIAL LINKS --- */
 .social-icons {
   display: flex;
   flex-direction: column;
@@ -166,31 +143,32 @@ const handleSubmit = () => {
 .social-icons a {
   display: flex;
   align-items: center;
-  gap: 2rem; 
+  gap: 2rem;
   color: #fff;
-  padding: 1.2rem 2rem; 
+  padding: 1.2rem 2rem;
   background: #111827;
   border: 1px solid #374151;
-  border-radius: 16px; 
+  border-radius: 16px;
   transition: all 0.3s ease;
-  width: 100%; 
+  width: 100%;
   box-sizing: border-box;
   text-decoration: none;
 }
 
 .social-icons .icon {
-  font-size: 2.2rem; 
+  font-size: 2.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 .social-icons span {
   font-size: 1.2rem;
   font-weight: 500;
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
+/* --- HOVER EFFECTS --- */
 .social-icons a.linkedin:hover {
   border-color: #0077B5;
   background: rgba(0, 119, 181, 0.05);
@@ -198,15 +176,16 @@ const handleSubmit = () => {
   transform: translateY(-5px);
 }
 .social-icons a.github:hover {
-  border-color: #ff00bb; 
+  border-color: #ff00bb;
   background: rgba(255, 0, 187, 0.05);
   box-shadow: 0 0 25px rgba(255, 0, 187, 0.5);
   transform: translateY(-5px);
 }
 
+/* --- RESPONSIVE ADJUSTMENT --- */
 @media (max-width: 768px) {
   .contact-section {
-    padding: 100px 5% 3rem 5%;
+    padding: 140px 5% 3rem 5%;
     text-align: center;
   }
   .contact-wrapper {
@@ -228,7 +207,7 @@ const handleSubmit = () => {
     font-size: 1.5rem;
     text-align: center;
     border-left: none;
-    border-bottom: 2px solid #ff00bb; 
+    border-bottom: 2px solid #ff00bb;
     padding-bottom: 0.5rem;
     display: inline-block;
     margin: 0 auto 1.5rem auto;
