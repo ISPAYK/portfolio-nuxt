@@ -5,5 +5,5 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   srcDir: 'app',
-  css: ['~/assets/main.css']
+  css: ['../assets/main.css']
 })
