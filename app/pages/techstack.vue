@@ -9,9 +9,8 @@ const techCategories = ref([
   {
     name: 'Programming Languages',
     borderColor: '#ec4899',
-    hoverColor: '#ec4899',
-    titleColor: 'text-pink-500',
-    gridCols: 'grid-cols-2 md:grid-cols-3',
+    titleClass: 'text-pink-500',
+    gridType: 'grid-3',
     items: [
       {
         id: 1,
@@ -43,9 +42,8 @@ const techCategories = ref([
   {
     name: 'Web & Database',
     borderColor: '#3b82f6',
-    hoverColor: '#3b82f6',
-    titleColor: 'text-blue-500',
-    gridCols: 'grid-cols-2 md:grid-cols-4',
+    titleClass: 'text-blue-500',
+    gridType: 'grid-4',
     items: [
       {
         id: 4,
@@ -84,9 +82,8 @@ const techCategories = ref([
   {
     name: 'Tools & Version Control',
     borderColor: '#22c55e',
-    hoverColor: '#22c55e',
-    titleColor: 'text-green-500',
-    gridCols: 'grid-cols-2 md:grid-cols-3',
+    titleClass: 'text-green-500',
+    gridType: 'grid-3',
     items: [
       {
         id: 8,
@@ -156,30 +153,30 @@ function closeModal() {
 </script>
 
 <template>
-  <section class="max-w-6xl mx-auto py-12 px-4 sm:px-6 pt-28" id="tech">
-    <h2 class="text-3xl md:text-4xl font-orbitron text-center mb-2">
-      My <span class="text-[#ff00bb] drop-shadow-[0_0_10px_rgba(255,0,187,0.4)]">Tech Stack</span>
+  <section class="tech-section" id="tech">
+    <h2 class="section-title">
+      My <span class="highlight-pink">Tech Stack</span>
     </h2>
-    <p class="text-center text-gray-400 mb-10 text-sm md:text-base">Tap or click cards to view full details</p>
+    <p class="section-subtitle">Tap or click cards to view full details</p>
 
     <!-- CATEGORIES LOOP -->
     <div 
       v-for="category in techCategories" 
       :key="category.name" 
-      class="mb-12"
+      class="category-block"
     >
       <h3 
-        class="text-xl md:text-2xl font-orbitron mb-6 border-l-4 pl-4"
-        :style="{ borderColor: category.borderColor }"
+        class="category-heading font-orbitron"
+        :style="{ borderLeftColor: category.borderColor }"
       >
         {{ category.name }}
       </h3>
 
-      <div class="grid gap-4 md:gap-6" :class="category.gridCols">
+      <div class="tech-grid" :class="category.gridType">
         <div
           v-for="item in category.items"
           :key="item.id"
-          class="tech-key-box"
+          class="key"
           @click="openModal(item)"
         >
           <!-- ICON / IMAGE -->
@@ -189,7 +186,7 @@ function closeModal() {
               v-else-if="item.iconType === 'image'" 
               :src="item.imageSrc" 
               :alt="item.imageAlt"
-              class="w-14 h-14 md:w-16 md:h-16 object-contain"
+              class="c-img"
             />
           </div>
 
@@ -198,7 +195,7 @@ function closeModal() {
 
           <!-- HOVER OVERLAY (DESKTOP) -->
           <div class="key-overlay">
-            <h3 class="font-bold font-orbitron" :class="category.titleColor">{{ item.name }}</h3>
+            <h3 class="font-bold font-orbitron" :class="category.titleClass">{{ item.name }}</h3>
             <p class="text-xs text-center mt-1 text-gray-300">{{ item.subtitle }}</p>
           </div>
         </div>
@@ -208,28 +205,28 @@ function closeModal() {
     <!-- MOBILE / CLICK MODAL -->
     <div 
       v-if="isModalOpen" 
-      class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      class="modal-backdrop"
       @click.self="closeModal"
     >
-      <div class="bg-gray-900 p-6 rounded-2xl w-full max-w-sm border border-pink-500 relative mx-4">
+      <div class="modal-box">
         <button 
-          class="absolute top-2 right-4 text-3xl text-white hover:text-pink-500 transition cursor-pointer"
+          class="close-btn"
           @click="closeModal"
         >
           &times;
         </button>
 
-        <div v-if="selectedItem" class="mt-4 text-center">
-          <div class="flex justify-center mb-4">
-            <i v-if="selectedItem.iconType === 'boxicon'" :class="[selectedItem.iconClass, 'text-6xl']"></i>
+        <div v-if="selectedItem" class="text-center mt-2">
+          <div class="modal-icon-wrap">
+            <i v-if="selectedItem.iconType === 'boxicon'" :class="[selectedItem.iconClass, 'text-5xl']"></i>
             <img 
               v-else-if="selectedItem.iconType === 'image'" 
               :src="selectedItem.imageSrc" 
               :alt="selectedItem.imageAlt"
-              class="w-16 h-16 object-contain"
+              class="w-16 h-16 object-contain mx-auto"
             />
           </div>
-          <h3 class="text-2xl font-bold font-orbitron text-pink-500 mb-2">{{ selectedItem.name }}</h3>
+          <h3 class="text-2xl font-bold font-orbitron text-pink-500 my-2">{{ selectedItem.name }}</h3>
           <p class="text-gray-300 text-sm leading-relaxed">{{ selectedItem.description }}</p>
         </div>
       </div>
@@ -240,7 +237,61 @@ function closeModal() {
 <style scoped>
 .font-orbitron { font-family: "Orbitron", sans-serif; }
 
-/* --- TECH STACK LOGO COLORS --- */
+.tech-section {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 120px 1.5rem 4rem 1.5rem;
+}
+
+.section-title {
+  font-family: "Orbitron", sans-serif;
+  font-size: 2.25rem;
+  text-align: center;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.highlight-pink {
+  color: #ff00bb;
+  filter: drop-shadow(0 0 10px rgba(255, 0, 187, 0.4));
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #9ca3af;
+  margin-bottom: 2.5rem;
+  font-size: 0.95rem;
+}
+
+.category-block {
+  margin-bottom: 3rem;
+}
+
+.category-heading {
+  font-size: 1.35rem;
+  color: #fff;
+  border-left: 4px solid #ff007f;
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* --- GRID LAYOUT EXPLICIT RULES --- */
+.tech-grid {
+  display: grid;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* --- ICON COLORS --- */
 .icon-java { color: #f89820; }
 .icon-python { color: #3776ab; }
 .icon-html { color: #e34f26; }
@@ -253,8 +304,14 @@ function closeModal() {
 .icon-git { color: #f05032; }
 .icon-github { color: #fff; }
 
-/* --- KEYBOARD STYLE BOXES --- */
-.tech-key-box {
+.c-img {
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
+}
+
+/* --- KEYBOARD BOXES --- */
+.key {
   position: relative;
   cursor: pointer;
   display: flex;
@@ -271,7 +328,7 @@ function closeModal() {
   gap: 0.5rem;
 }
 
-.tech-key-box:hover {
+.key:hover {
   border-color: #ec4899;
 }
 
@@ -284,7 +341,7 @@ function closeModal() {
 }
 
 .mobile-label {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #e5e7eb;
   display: block;
@@ -307,18 +364,70 @@ function closeModal() {
 /* Desktop Hover Effects */
 @media (min-width: 769px) {
   .mobile-label { display: none; }
-  .tech-key-box:hover .key-overlay { opacity: 1; }
-  .tech-key-box:hover .keycap { opacity: 0.1; transform: scale(0.9); }
+  .key:hover .key-overlay { opacity: 1; }
+  .key:hover .keycap { opacity: 0.1; transform: scale(0.9); }
 }
 
 /* Responsive Mobile Screens */
 @media (max-width: 768px) {
-  .tech-key-box {
+  .grid-3, .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .key {
     height: 8.5rem;
   }
   .keycap {
     font-size: 2.8rem;
   }
+  .c-img {
+    width: 3.2rem;
+    height: 3.2rem;
+  }
   .key-overlay { display: none !important; }
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-box {
+  background: #111827;
+  border: 1px solid #ec4899;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 24rem;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  font-size: 1.875rem;
+  color: #fff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #ec4899;
+}
+
+.modal-icon-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.75rem;
 }
 </style>
