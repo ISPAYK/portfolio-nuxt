@@ -1,21 +1,17 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 useHead({
-  title: 'Tech Stack | Harell Diaz',
-  htmlAttrs: {
-    style: '--nav-glow: #ff007f; --nav-secondary: #00d2ff;'
-  }
+  title: 'Tech Stack | Harell Diaz'
 })
 
-// Dynamic categories batay sa orihinal mong techstack.html
 const techCategories = ref([
   {
     name: 'Programming Languages',
-    borderColor: 'border-pink-500',
-    hoverColor: 'hover:border-pink-500',
+    borderColor: '#ec4899',
+    hoverColor: '#ec4899',
     titleColor: 'text-pink-500',
-    gridClass: 'grid-cols-2 md:grid-cols-3',
+    gridCols: 'grid-cols-2 md:grid-cols-3',
     items: [
       {
         id: 1,
@@ -46,10 +42,10 @@ const techCategories = ref([
   },
   {
     name: 'Web & Database',
-    borderColor: 'border-blue-500',
-    hoverColor: 'hover:border-blue-500',
+    borderColor: '#3b82f6',
+    hoverColor: '#3b82f6',
     titleColor: 'text-blue-500',
-    gridClass: 'grid-cols-2 md:grid-cols-4',
+    gridCols: 'grid-cols-2 md:grid-cols-4',
     items: [
       {
         id: 4,
@@ -87,10 +83,10 @@ const techCategories = ref([
   },
   {
     name: 'Tools & Version Control',
-    borderColor: 'border-green-500',
-    hoverColor: 'hover:border-green-500',
+    borderColor: '#22c55e',
+    hoverColor: '#22c55e',
     titleColor: 'text-green-500',
-    gridClass: 'grid-cols-2 md:grid-cols-3',
+    gridCols: 'grid-cols-2 md:grid-cols-3',
     items: [
       {
         id: 8,
@@ -145,7 +141,6 @@ const techCategories = ref([
   }
 ])
 
-// Modal State
 const isModalOpen = ref(false)
 const selectedItem = ref(null)
 
@@ -174,18 +169,17 @@ function closeModal() {
       class="mb-12"
     >
       <h3 
-        class="text-1xl md:text-2xl font-orbitron mb-6 border-l-4 pl-4"
-        :class="category.borderColor"
+        class="text-xl md:text-2xl font-orbitron mb-6 border-l-4 pl-4"
+        :style="{ borderColor: category.borderColor }"
       >
         {{ category.name }}
       </h3>
 
-      <div class="grid gap-4 md:gap-6" :class="category.gridClass">
+      <div class="grid gap-4 md:gap-6" :class="category.gridCols">
         <div
           v-for="item in category.items"
           :key="item.id"
-          class="key"
-          :class="category.hoverColor"
+          class="tech-key-box"
           @click="openModal(item)"
         >
           <!-- ICON / IMAGE -->
@@ -260,7 +254,7 @@ function closeModal() {
 .icon-github { color: #fff; }
 
 /* --- KEYBOARD STYLE BOXES --- */
-.key {
+.tech-key-box {
   position: relative;
   cursor: pointer;
   display: flex;
@@ -271,9 +265,14 @@ function closeModal() {
   border: 1px solid #374151;
   border-radius: 1rem;
   height: 10rem;
+  width: 100%;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   gap: 0.5rem;
+}
+
+.tech-key-box:hover {
+  border-color: #ec4899;
 }
 
 .keycap {
@@ -308,13 +307,13 @@ function closeModal() {
 /* Desktop Hover Effects */
 @media (min-width: 769px) {
   .mobile-label { display: none; }
-  .key:hover .key-overlay { opacity: 1; }
-  .key:hover .keycap { opacity: 0.1; transform: scale(0.9); }
+  .tech-key-box:hover .key-overlay { opacity: 1; }
+  .tech-key-box:hover .keycap { opacity: 0.1; transform: scale(0.9); }
 }
 
 /* Responsive Mobile Screens */
 @media (max-width: 768px) {
-  .key {
+  .tech-key-box {
     height: 8.5rem;
   }
   .keycap {
