@@ -1,6 +1,5 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import '~/assets/main.css'
 
 // --- 1. TYPEWRITER SETTINGS ---
 const prefixText = "Hello! I'm"
