@@ -1,5 +1,6 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import '~/assets/main.css'
 
 // --- 1. TYPEWRITER SETTINGS ---
 const prefixText = "Hello! I'm"
@@ -113,8 +114,6 @@ function handleSplashScreen() {
 }
 
 // --- 3. TECH STACK KEYS + MOBILE MODAL ---
-// The original script read these from the DOM (.key, .key-info h3/p, .keycap).
-// Now they are data. Replace the entries with the items from your techstack.html.
 const techKeys = ref([
   { id: 1, icon: '<i class="fab fa-html5"></i>', title: 'HTML5', description: 'Semantic markup for structured, accessible pages.' },
   { id: 2, icon: '<i class="fab fa-css3-alt"></i>', title: 'CSS3', description: 'Styling, layouts, and animations.' },
@@ -145,14 +144,13 @@ const contactForm = reactive({
 })
 
 function handleContactSubmit() {
-  alert('Message Sent! (Integrate your mail carrier logic here)')
+  alert('Message Sent!')
 }
 
 // --- 5. CERTIFICATE VIEWER (switchPage) ---
-// Replace the entries with your real certificate page images.
 const certPages = ref([
-  { label: '1', src: '/images/cert-page-1.jpg' },
-  { label: '2', src: '/images/cert-page-2.jpg' }
+  { label: '1', src: '/images/cert-page1.jpg' },
+  { label: '2', src: '/images/cert-page2.jpg' }
 ])
 
 const activeCertIndex = ref(0)
@@ -178,10 +176,8 @@ function closeModal() {
   isCertModalOpen.value = false
 }
 
-// --- 7. FLOATING IMAGE ANIMATION (anime.js) ---
+// --- 7. FLOATING IMAGE ANIMATION ---
 const homeImg = ref(null)
-let animeInstance = null
-let animeLib = null
 
 async function startFloatAnimation() {
   if (!homeImg.value) return
@@ -198,34 +194,31 @@ onBeforeUnmount(() => {
   clearAllTimeouts()
   pageTimeouts.forEach((t) => clearTimeout(t))
   pageTimeouts = []
-  if (animeLib && homeImg.value) animeLib.remove(homeImg.value)
-  animeInstance = null
 })
 </script>
 
 <template>
-  <!-- SPLASH SCREEN: replaces getElementById('splashScreen') + style.display/classList -->
+  <!-- SPLASH SCREEN -->
   <div
     v-show="splashVisible"
     id="splashScreen"
     :class="{ 'fade-out': splashFadingOut }"
   >
-    <!-- your splash content -->
   </div>
 
-  <!-- MAIN CONTENT: replaces classList.add('show-main') + style.opacity -->
+  <!-- MAIN CONTENT -->
   <div id="mainContent" :class="{ 'show-main': mainShown }" :style="{ opacity: mainShown ? 1 : 0 }">
 
-    <!-- TYPEWRITER: replaces element.innerHTML += char -->
+    <!-- TYPEWRITER -->
     <h1>
       <span id="typewriter-prefix">{{ typewriterPrefix }}</span>
       <span id="typewriter-name">{{ typewriterName }}</span>
     </h1>
 
-    <!-- FLOATING IMAGE: template ref instead of querySelector('.home-img') -->
+    <!-- FLOATING IMAGE -->
     <img ref="homeImg" class="home-img" src="/images/harellmain.jpg" alt="Home" />
 
-    <!-- TECH KEYS: v-for replaces querySelectorAll('.key') + addEventListener -->
+    <!-- TECH KEYS -->
     <div class="keyboard">
       <div
         v-for="key in techKeys"
@@ -241,7 +234,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- MOBILE MODAL: @click.self replaces the window click listener on the backdrop -->
+    <!-- MOBILE MODAL -->
     <div
       v-show="isMobileModalOpen"
       id="mobileModal"
@@ -265,7 +258,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- CERTIFICATE VIEWER: :class replaces classList add/remove('page-active') -->
+    <!-- CERTIFICATE VIEWER -->
     <div class="cert-viewer">
       <img id="certDisplay" :src="certDisplaySrc" alt="Certificate" @click="openModal(certDisplaySrc)" />
       <div class="page-buttons">
@@ -281,7 +274,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- CERT LIGHTBOX: @click.self replaces the event.target === modal check -->
+    <!-- CERT LIGHTBOX -->
     <div
       v-show="isCertModalOpen"
       id="certModal"
@@ -293,7 +286,7 @@ onBeforeUnmount(() => {
       <img id="imgFull" :src="fullImgSrc" alt="Certificate full view" />
     </div>
 
-    <!-- CONTACT FORM: @submit.prevent replaces e.preventDefault() -->
+    <!-- CONTACT FORM -->
     <form class="contact-form" @submit.prevent="handleContactSubmit">
       <input v-model="contactForm.name" type="text" placeholder="Name" required />
       <input v-model="contactForm.email" type="email" placeholder="Email" required />
@@ -302,3 +295,12 @@ onBeforeUnmount(() => {
     </form>
   </div>
 </template>
+
+<style scoped>
+.home-img {
+  max-width: 320px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+</style>
