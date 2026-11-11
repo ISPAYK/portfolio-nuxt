@@ -185,20 +185,6 @@ let animeLib = null
 
 async function startFloatAnimation() {
   if (!homeImg.value) return
-  try {
-    // npm i animejs  (v3 API, matching your original anime({...}) call)
-    const mod = await import('animejs')
-    animeLib = mod.default || mod
-    animeInstance = animeLib({
-      targets: homeImg.value,
-      translateY: [0, -15, 0],
-      duration: 3000,
-      easing: 'easeInOutQuad',
-      loop: true
-    })
-  } catch (err) {
-    console.warn('anime.js not available:', err)
-  }
 }
 
 // --- LIFECYCLE ---
