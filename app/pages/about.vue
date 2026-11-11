@@ -1,7 +1,10 @@
 <script setup>
 useHead({
   title: 'About Me | Harell Diaz',
-  bodyAttrs: { class: 'about-page' }
+  bodyAttrs: { class: 'about-page' },
+  htmlAttrs: {
+    style: '--nav-glow: #ff007f; --nav-secondary: #00d2ff;'
+  }
 })
 </script>
 
@@ -24,8 +27,7 @@ useHead({
 </template>
 
 <style scoped>
-/* Global main.css gives every <section> min-height:100vh and a flex column layout.
-   The legacy About page didn't load that file, so restore normal block flow here. */
+/* Restore normal block layout so standard vertical scrolling works seamlessly */
 #about {
   min-height: auto;
   display: block;

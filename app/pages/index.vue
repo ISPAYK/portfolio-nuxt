@@ -1,10 +1,12 @@
 <script setup>
-// --- Timing / copy (the legacy values lived in tech-stack-script.js) ---
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+
+// --- Timing / copy ---
 const SPLASH_DURATION = 2500 // ms the splash stays fully visible
 const FADE_DURATION = 800    // ms, matches .splash-screen opacity transition
 const TYPE_SPEED = 90        // ms per character
 const typewriterLines = {
-  prefix: "Hi, I'm",
+  prefix: "Hello! I'm",
   name: 'Harell Diaz'
 }
 
@@ -15,15 +17,16 @@ const showMain = ref(false)
 const typewriterPrefix = ref('')
 const typewriterName = ref('')
 
-// body.hidden-scroll blocks scrolling while the splash screen is visible
+// Set document title and CSS variables
 useHead({
   title: 'Harell Diaz | Web Portfolio',
   bodyAttrs: {
     class: computed(() =>
-      splashMounted.value
-        ? 'hidden-scroll bg-[#0b0c10] text-white'
-        : 'bg-[#0b0c10] text-white'
+      splashMounted.value ? 'hidden-scroll' : ''
     )
+  },
+  htmlAttrs: {
+    style: '--nav-glow: #ff007f; --nav-secondary: #00d2ff;'
   }
 })
 
@@ -39,6 +42,16 @@ async function typeText(target, text) {
 }
 
 onMounted(async () => {
+  // Check if splash screen was already watched in this session
+  if (sessionStorage.getItem('splashWatched') === 'true') {
+    splashMounted.value = false
+    showMain.value = true
+    await typeText(typewriterPrefix, typewriterLines.prefix)
+    await sleep(200)
+    await typeText(typewriterName, typewriterLines.name)
+    return
+  }
+
   await sleep(SPLASH_DURATION)
   if (cancelled) return
 
@@ -49,6 +62,7 @@ onMounted(async () => {
   if (cancelled) return
 
   splashMounted.value = false
+  sessionStorage.setItem('splashWatched', 'true')
 
   // Typewriter intro
   await typeText(typewriterPrefix, typewriterLines.prefix)
@@ -63,6 +77,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
+    <!-- SPLASH SCREEN -->
     <div
       v-if="splashMounted"
       id="splashScreen"
@@ -84,15 +99,14 @@ onBeforeUnmount(() => {
       <div class="neon-ring ring-bottom"></div>
     </div>
 
+    <!-- MAIN HERO CONTENT -->
     <div id="mainContent" class="main-content" :class="{ 'show-main': showMain }">
       <section class="home" id="home">
 
         <div class="home-content-left typewriter-container animate-text" :class="{ show: showMain }">
-          <h1 class="font-orbitron text-[2.2rem] min-h-[45px]">
-            <span id="typewriter-prefix">{{ typewriterPrefix }}</span>
-          </h1>
-          <h1 class="name font-orbitron text-[3rem] text-[#ff00bb] min-h-[60px]">
-            <span id="typewriter-name">{{ typewriterName }}</span>
+          <h1>
+            <span id="typewriter-prefix">{{ typewriterPrefix }}</span><br />
+            <span id="typewriter-name" class="name">{{ typewriterName }}</span>
           </h1>
         </div>
 
@@ -103,12 +117,10 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="home-content-right animate-text" :class="{ show: showMain }">
-          <h3 class="font-orbitron text-[2.5rem] font-bold">Future Web</h3>
-          <h3 class="role font-orbitron text-[2.5rem] text-[#ff00bb] font-bold drop-shadow-[0_0_10px_rgba(255,0,187,0.6)]">
-            Developer
-          </h3>
+          <h3>Future Web</h3>
+          <h3 class="role">Developer</h3>
           <div class="mt-6">
-            <NuxtLink to="/about" class="btn">View My Work</NuxtLink>
+            <NuxtLink to="/techstack" class="btn">View My Work</NuxtLink>
           </div>
         </div>
 
@@ -117,10 +129,8 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped>
-.font-orbitron { font-family: 'Orbitron', sans-serif; }
-
-/* Transition classes used by the splash / reveal logic */
+<style>
+/* Unscoped transitions to ensure main.css styles apply cleanly */
 .main-content {
   opacity: 0;
   transition: opacity 0.8s ease;
