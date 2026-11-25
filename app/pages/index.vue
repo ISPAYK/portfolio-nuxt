@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { Code2, ArrowRight } from 'lucide-vue-next'
 
 // --- Timing / copy ---
 const SPLASH_DURATION = 2500 // ms the splash stays fully visible
@@ -28,6 +29,13 @@ useHead({
   htmlAttrs: {
     style: '--nav-glow: #ff007f; --nav-secondary: #00d2ff;'
   }
+})
+
+useSeoMeta({
+  title: 'Harell Diaz | Web Portfolio',
+  description: 'Portfolio of Harell Diaz — Future Full-Stack Web Developer specializing in interactive, modern web applications.',
+  ogTitle: 'Harell Diaz | Web Portfolio',
+  ogDescription: 'Explore projects, tech stack, certifications, and background of Harell Diaz.'
 })
 
 let cancelled = false
@@ -91,8 +99,14 @@ onBeforeUnmount(() => {
           <h1 class="year-text">2026</h1>
         </div>
         <ul class="services-labels list-none p-0 m-0">
-          <li class="label inline-block">Software Engineering</li>
-          <li class="label inline-block">Web Development</li>
+          <li class="label inline-flex items-center gap-1.5">
+            <Code2 class="w-4 h-4" />
+            Software Engineering
+          </li>
+          <li class="label inline-flex items-center gap-1.5">
+            <Code2 class="w-4 h-4" />
+            Web Development
+          </li>
         </ul>
       </div>
       <div class="neon-ring ring-top"></div>
@@ -120,7 +134,10 @@ onBeforeUnmount(() => {
           <h3>Future Web</h3>
           <h3 class="role">Developer</h3>
           <div class="mt-6">
-            <NuxtLink to="/techstack" class="btn">View My Work</NuxtLink>
+            <NuxtLink to="/techstack" class="btn inline-flex items-center gap-2">
+              View My Work
+              <ArrowRight class="w-4 h-4" />
+            </NuxtLink>
           </div>
         </div>
 

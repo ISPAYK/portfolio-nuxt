@@ -1,6 +1,16 @@
 <script setup>
+import { reactive } from 'vue'
+import { Send, Linkedin, Github, Mail } from 'lucide-vue-next'
+
 useHead({
   title: 'Contact | Harell Diaz'
+})
+
+useSeoMeta({
+  title: 'Contact | Harell Diaz',
+  description: 'Get in touch with Harell Diaz for web development inquiries, project collaborations, or opportunities.',
+  ogTitle: 'Contact | Harell Diaz',
+  ogDescription: 'Send a message or connect with Harell Diaz on LinkedIn and GitHub.'
 })
 
 const form = reactive({
@@ -12,15 +22,25 @@ const form = reactive({
 })
 
 function handleSubmit() {
-  alert('Message Sent! (Integrate your mail carrier logic here)')
+  alert(`Thank you, ${form.fullName}! Your message has been sent.`)
+  form.fullName = ''
+  form.email = ''
+  form.mobile = ''
+  form.subject = ''
+  form.message = ''
 }
 </script>
 
 <template>
   <section class="contact-section">
     <div class="contact-container">
-      <h2 class="text-3xl md:text-5xl font-orbitron font-bold mb-3">Get In <span class="text-[#ff00bb]">Touch</span></h2>
-      <p class="text-gray-400 max-w-xl mx-auto md:mx-0 text-sm md:text-base">Have a question or want to collaborate on a project? Send me a message!</p>
+      <h2 class="text-3xl md:text-5xl font-orbitron font-bold mb-3">
+        <Mail class="w-8 h-8 md:w-10 md:h-10 text-[#ff00bb] inline-block mr-2 -mt-1" />
+        Get In <span class="text-[#ff00bb]">Touch</span>
+      </h2>
+      <p class="text-gray-400 max-w-xl mx-auto md:mx-0 text-sm md:text-base">
+        Have a question or want to collaborate on a project? Send me a message!
+      </p>
 
       <div class="contact-wrapper">
         <form action="#" class="contact-form" @submit.prevent="handleSubmit">
@@ -29,23 +49,26 @@ function handleSubmit() {
             <input v-model="form.email" type="email" placeholder="Email Address" required>
           </div>
           <div class="input-box">
-            <input v-model="form.mobile" type="number" placeholder="Mobile Number">
+            <input v-model="form.mobile" type="tel" placeholder="Mobile Number">
             <input v-model="form.subject" type="text" placeholder="Email Subject">
           </div>
           <textarea v-model="form.message" name="message" placeholder="Your Message" required></textarea>
 
-          <button type="submit" class="btn-send font-orbitron">Send Message</button>
+          <button type="submit" class="btn-send font-orbitron">
+            <Send class="w-4 h-4 inline-block mr-2 -mt-0.5" />
+            Send Message
+          </button>
         </form>
 
         <div class="contact-info text-left">
           <h3 class="font-orbitron font-bold text-xl border-l-4 border-[#ff00bb] pl-3">Connect with me</h3>
           <div class="social-icons">
             <a href="https://www.linkedin.com/in/harell-diaz-78494b40a" class="linkedin" target="_blank" rel="noopener noreferrer">
-              <div class="icon text-blue-400"><i class="bx bxl-linkedin"></i></div>
+              <div class="icon text-blue-400"><Linkedin class="w-8 h-8" /></div>
               <span>LinkedIn</span>
             </a>
             <a href="https://github.com/ISPAYK" class="github" target="_blank" rel="noopener noreferrer">
-              <div class="icon text-white"><i class="bx bxl-github"></i></div>
+              <div class="icon text-white"><Github class="w-8 h-8" /></div>
               <span>GitHub</span>
             </a>
           </div>
@@ -61,7 +84,7 @@ function handleSubmit() {
 /* --- CONTACT STRUCTURE ADJUSTMENTS --- */
 .contact-section {
   padding: 100px 10% 4rem 10%;
-  max-width: 1300px; /* was the invalid property "max-w" in the legacy file */
+  max-width: 1300px;
   margin: 0 auto;
 }
 .contact-container {

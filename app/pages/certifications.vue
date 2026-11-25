@@ -1,8 +1,16 @@
 <script setup>
 import { ref } from 'vue'
+import { Award, Eye, ExternalLink, X } from 'lucide-vue-next'
 
 useHead({
   title: 'Certifications | Harell Diaz'
+})
+
+useSeoMeta({
+  title: 'Certifications | Harell Diaz',
+  description: 'A showcase of credentials, academic achievements, and professional verifications earned by Harell Diaz.',
+  ogTitle: 'Certifications | Harell Diaz',
+  ogDescription: 'Verified software engineering and Microsoft certifications of Harell Diaz.'
 })
 
 // Reactive state mula sa certifications.html logic
@@ -25,7 +33,7 @@ function openModal(imageSrc) {
 }
 
 function closeModal(event) {
-  if (event.target.classList.contains('modal') || event.target.classList.contains('close')) {
+  if (event.target.classList.contains('modal') || event.target.closest('.close')) {
     isModalOpen.value = false
   }
 }
@@ -35,6 +43,7 @@ function closeModal(event) {
   <div class="certifications-page">
     <section class="certifications">
       <h2 class="text-3xl md:text-5xl font-orbitron font-bold mb-2 text-center md:text-left">
+        <Award class="w-8 h-8 md:w-10 md:h-10 text-[#ff00bb] inline-block mr-2 -mt-1" />
         My <span class="text-[#ff00bb]">Certifications</span>
       </h2>
       <p class="text-gray-400 text-sm md:text-base text-center md:text-left mb-6">
@@ -74,6 +83,7 @@ function closeModal(event) {
             
             <div class="cert-buttons">
               <button @click="openModal(currentSaylorImg)" class="btn-small fill font-orbitron">
+                <Eye class="w-4 h-4 inline-block mr-1 -mt-0.5" />
                 View Work
               </button>
               <a 
@@ -81,6 +91,7 @@ function closeModal(event) {
                 target="_blank" 
                 class="btn-small outline font-orbitron text-xs sm:text-sm"
               >
+                <ExternalLink class="w-4 h-4 inline-block mr-1 -mt-0.5" />
                 Verify ID: 3096369185HD
               </a>
             </div>
@@ -104,6 +115,7 @@ function closeModal(event) {
             
             <div class="cert-buttons">
               <button @click="openModal('/images/cert-word-page1.jpg')" class="btn-small fill font-orbitron">
+                <Eye class="w-4 h-4 inline-block mr-1 -mt-0.5" />
                 View Work
               </button>
               <a 
@@ -111,6 +123,7 @@ function closeModal(event) {
                 target="_blank" 
                 class="btn-small outline font-orbitron"
               >
+                <ExternalLink class="w-4 h-4 inline-block mr-1 -mt-0.5" />
                 Verify on Credly
               </a>
             </div>
@@ -121,7 +134,7 @@ function closeModal(event) {
 
     <!-- Full Screen Modal Image Viewer -->
     <div v-if="isModalOpen" class="modal" @click="closeModal">
-      <span class="close" @click="closeModal">&times;</span>
+      <span class="close" @click="closeModal"><X class="w-9 h-9" /></span>
       <img class="modal-content" :src="modalImgSrc" alt="Full View Certificate" />
     </div>
   </div>

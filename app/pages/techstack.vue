@@ -1,8 +1,30 @@
 <script setup>
 import { ref } from 'vue'
+import {
+  Coffee,
+  Terminal,
+  FileCode2,
+  Palette,
+  Braces,
+  Database,
+  Code2,
+  Smartphone,
+  Cloud,
+  GitBranch,
+  Github,
+  Cpu,
+  X
+} from 'lucide-vue-next'
 
 useHead({
   title: 'Tech Stack | Harell Diaz'
+})
+
+useSeoMeta({
+  title: 'Tech Stack | Harell Diaz',
+  description: 'Programming languages, web technologies, databases, and developer tools used by Harell Diaz.',
+  ogTitle: 'Tech Stack | Harell Diaz',
+  ogDescription: 'Explore the technical skills and tools of Harell Diaz.'
 })
 
 const techCategories = ref([
@@ -15,16 +37,18 @@ const techCategories = ref([
       {
         id: 1,
         name: 'Java',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-java icon-java',
+        iconType: 'lucide',
+        iconComponent: Coffee,
+        iconClass: 'icon-java',
         subtitle: 'Robust backend logic',
         description: 'Used for object-oriented programming and building robust backend logic.'
       },
       {
         id: 2,
         name: 'Python',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-python icon-python',
+        iconType: 'lucide',
+        iconComponent: Terminal,
+        iconClass: 'icon-python',
         subtitle: 'Scripting & Data Analysis',
         description: 'Applied for scripting, data analysis, and simplifying complex automation tasks.'
       },
@@ -48,32 +72,36 @@ const techCategories = ref([
       {
         id: 4,
         name: 'HTML',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-html5 icon-html',
+        iconType: 'lucide',
+        iconComponent: FileCode2,
+        iconClass: 'icon-html',
         subtitle: 'Web Structure',
         description: 'Creating the structural foundation of responsive web pages.'
       },
       {
         id: 5,
         name: 'CSS',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-css3 icon-css',
+        iconType: 'lucide',
+        iconComponent: Palette,
+        iconClass: 'icon-css',
         subtitle: 'Modern Layouts',
         description: 'Designing modern layouts with animations, flexbox, and grid.'
       },
       {
         id: 6,
         name: 'JavaScript',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-javascript icon-javascript',
+        iconType: 'lucide',
+        iconComponent: Braces,
+        iconClass: 'icon-javascript',
         subtitle: 'Interactivity',
         description: 'Adding interactivity and dynamic functionality.'
       },
       {
         id: 7,
         name: 'PostgreSQL',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-postgresql icon-postgresql',
+        iconType: 'lucide',
+        iconComponent: Database,
+        iconClass: 'icon-postgresql',
         subtitle: 'Relational DB',
         description: 'Advanced relational database management system.'
       }
@@ -88,16 +116,18 @@ const techCategories = ref([
       {
         id: 8,
         name: 'VS Code',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-visual-studio icon-vs',
+        iconType: 'lucide',
+        iconComponent: Code2,
+        iconClass: 'icon-vs',
         subtitle: 'Main Code Editor',
         description: 'Primary code editor for development.'
       },
       {
         id: 9,
         name: 'Android Studio',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-android icon-android',
+        iconType: 'lucide',
+        iconComponent: Smartphone,
+        iconClass: 'icon-android',
         subtitle: 'Mobile Dev',
         description: 'IDE for high-performance Android applications.'
       },
@@ -113,24 +143,27 @@ const techCategories = ref([
       {
         id: 11,
         name: 'Oracle APEX',
-        iconType: 'boxicon',
-        iconClass: 'bx bx-cloud icon-oracle',
+        iconType: 'lucide',
+        iconComponent: Cloud,
+        iconClass: 'icon-oracle',
         subtitle: 'Low-Code Platform',
         description: 'Low-code platform for building enterprise database apps.'
       },
       {
         id: 12,
         name: 'Git',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-git icon-git',
+        iconType: 'lucide',
+        iconComponent: GitBranch,
+        iconClass: 'icon-git',
         subtitle: 'Version Control',
         description: 'Version control and tracking history of changes.'
       },
       {
         id: 13,
         name: 'GitHub',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-github icon-github',
+        iconType: 'lucide',
+        iconComponent: Github,
+        iconClass: 'icon-github',
         subtitle: 'Collaboration',
         description: 'Hosting repositories, cloud backup, and code collaboration.'
       }
@@ -155,6 +188,7 @@ function closeModal() {
 <template>
   <section class="tech-section" id="tech">
     <h2 class="section-title">
+      <Cpu class="w-8 h-8 md:w-9 md:h-9 text-[#ff00bb] inline-block mr-2 -mt-1" />
       My <span class="highlight-pink">Tech Stack</span>
     </h2>
     <p class="section-subtitle">Tap or click cards to view full details</p>
@@ -181,7 +215,12 @@ function closeModal() {
         >
           <!-- ICON / IMAGE -->
           <div class="keycap">
-            <i v-if="item.iconType === 'boxicon'" :class="item.iconClass"></i>
+            <component
+              v-if="item.iconType === 'lucide'"
+              :is="item.iconComponent"
+              class="w-12 h-12 md:w-14 md:h-14"
+              :class="item.iconClass"
+            />
             <img 
               v-else-if="item.iconType === 'image'" 
               :src="item.imageSrc" 
@@ -212,13 +251,19 @@ function closeModal() {
         <button 
           class="close-btn"
           @click="closeModal"
+          aria-label="Close modal"
         >
-          &times;
+          <X class="w-6 h-6" />
         </button>
 
         <div v-if="selectedItem" class="text-center mt-2">
           <div class="modal-icon-wrap">
-            <i v-if="selectedItem.iconType === 'boxicon'" :class="[selectedItem.iconClass, 'text-5xl']"></i>
+            <component
+              v-if="selectedItem.iconType === 'lucide'"
+              :is="selectedItem.iconComponent"
+              class="w-12 h-12"
+              :class="selectedItem.iconClass"
+            />
             <img 
               v-else-if="selectedItem.iconType === 'image'" 
               :src="selectedItem.imageSrc" 
@@ -411,9 +456,8 @@ function closeModal() {
 
 .close-btn {
   position: absolute;
-  top: 0.5rem;
-  right: 1rem;
-  font-size: 1.875rem;
+  top: 0.75rem;
+  right: 0.75rem;
   color: #fff;
   background: transparent;
   border: none;

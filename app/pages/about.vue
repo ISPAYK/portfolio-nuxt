@@ -1,6 +1,15 @@
 <script setup>
+import { User } from 'lucide-vue-next'
+
 useHead({
   title: 'About Me | Harell Diaz'
+})
+
+useSeoMeta({
+  title: 'About Me | Harell Diaz',
+  description: 'Learn more about Harell Diaz, an aspiring Full-Stack Web Developer passionate about interactive digital experiences.',
+  ogTitle: 'About Me | Harell Diaz',
+  ogDescription: 'Background, goals, and web development philosophy of Harell Diaz.'
 })
 </script>
 
@@ -8,6 +17,7 @@ useHead({
   <section class="about-section">
     <div class="about-container">
       <h2 class="about-title font-orbitron">
+        <User class="about-icon" />
         About <span class="highlight-me">Me</span>
       </h2>
 
@@ -46,11 +56,22 @@ useHead({
 }
 
 .about-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
   font-size: 3.5rem;
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 3rem;
   letter-spacing: 2px;
+}
+
+.about-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  color: #ff00bb;
+  filter: drop-shadow(0 0 12px rgba(255, 0, 187, 0.8));
 }
 
 .highlight-me {
@@ -83,6 +104,10 @@ useHead({
   .about-title {
     font-size: 2.5rem;
     margin-bottom: 2rem;
+  }
+  .about-icon {
+    width: 2rem;
+    height: 2rem;
   }
   .about-text-content {
     font-size: 1rem;
