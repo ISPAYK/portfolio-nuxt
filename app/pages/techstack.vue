@@ -23,25 +23,21 @@ const techCategories = ref([
       {
         id: 1,
         name: 'Java',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-java icon-java',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg',
         subtitle: 'Robust backend logic',
         description: 'Used for object-oriented programming and building robust backend logic.'
       },
       {
         id: 2,
         name: 'Python',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-python icon-python',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
         subtitle: 'Scripting & Data Analysis',
         description: 'Applied for scripting, data analysis, and simplifying complex automation tasks.'
       },
       {
         id: 3,
         name: 'C Language',
-        iconType: 'image',
-        imageSrc: '/images/c.png',
-        imageAlt: 'C Language Logo',
+        logoSrc: '/images/c.png',
         subtitle: 'Memory management',
         description: 'Foundational knowledge in memory management and systems-level programming.'
       }
@@ -56,32 +52,28 @@ const techCategories = ref([
       {
         id: 4,
         name: 'HTML',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-html5 icon-html',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg',
         subtitle: 'Web Structure',
         description: 'Creating the structural foundation of responsive web pages.'
       },
       {
         id: 5,
         name: 'CSS',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-css3 icon-css',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg',
         subtitle: 'Modern Layouts',
         description: 'Designing modern layouts with animations, flexbox, and grid.'
       },
       {
         id: 6,
         name: 'JavaScript',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-javascript icon-javascript',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg',
         subtitle: 'Interactivity',
         description: 'Adding interactivity and dynamic functionality.'
       },
       {
         id: 7,
         name: 'PostgreSQL',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-postgresql icon-postgresql',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg',
         subtitle: 'Relational DB',
         description: 'Advanced relational database management system.'
       }
@@ -96,49 +88,43 @@ const techCategories = ref([
       {
         id: 8,
         name: 'VS Code',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-visual-studio icon-vs',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg',
         subtitle: 'Main Code Editor',
         description: 'Primary code editor for development.'
       },
       {
         id: 9,
         name: 'Android Studio',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-android icon-android',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/androidstudio/androidstudio-original.svg',
         subtitle: 'Mobile Dev',
         description: 'IDE for high-performance Android applications.'
       },
       {
         id: 10,
         name: 'SSMS',
-        iconType: 'image',
-        imageSrc: '/images/ssms.png',
-        imageAlt: 'SSMS Logo',
+        logoSrc: '/images/ssms.png',
         subtitle: 'SQL Server Admin',
         description: 'SQL Server Management Studio for database administration.'
       },
       {
         id: 11,
         name: 'Oracle APEX',
-        iconType: 'boxicon',
-        iconClass: 'bx bx-cloud icon-oracle',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/oracle/oracle-original.svg',
         subtitle: 'Low-Code Platform',
         description: 'Low-code platform for building enterprise database apps.'
       },
       {
         id: 12,
         name: 'Git',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-git icon-git',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg',
         subtitle: 'Version Control',
         description: 'Version control and tracking history of changes.'
       },
       {
         id: 13,
         name: 'GitHub',
-        iconType: 'boxicon',
-        iconClass: 'bx bxl-github icon-github',
+        logoSrc: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg',
+        invertDark: true,
         subtitle: 'Collaboration',
         description: 'Hosting repositories, cloud backup, and code collaboration.'
       }
@@ -188,14 +174,13 @@ function closeModal() {
           class="key"
           @click="openModal(item)"
         >
-          <!-- ICON / IMAGE -->
+          <!-- BRAND LOGO -->
           <div class="keycap">
-            <i v-if="item.iconType === 'boxicon'" :class="item.iconClass"></i>
-            <img 
-              v-else-if="item.iconType === 'image'" 
-              :src="item.imageSrc" 
-              :alt="item.imageAlt"
-              class="c-img"
+            <img
+              :src="item.logoSrc"
+              :alt="`${item.name} Logo`"
+              class="tech-logo"
+              :class="{ 'invert-logo': item.invertDark }"
             />
           </div>
 
@@ -228,12 +213,11 @@ function closeModal() {
 
         <div v-if="selectedItem" class="text-center mt-2">
           <div class="modal-icon-wrap">
-            <i v-if="selectedItem.iconType === 'boxicon'" :class="[selectedItem.iconClass, 'text-5xl']"></i>
-            <img 
-              v-else-if="selectedItem.iconType === 'image'" 
-              :src="selectedItem.imageSrc" 
-              :alt="selectedItem.imageAlt"
+            <img
+              :src="selectedItem.logoSrc"
+              :alt="`${selectedItem.name} Logo`"
               class="w-16 h-16 object-contain mx-auto"
+              :class="{ 'invert-logo': selectedItem.invertDark }"
             />
           </div>
           <h3 class="text-2xl font-bold font-orbitron text-pink-500 my-2">{{ selectedItem.name }}</h3>
@@ -301,23 +285,14 @@ function closeModal() {
   grid-template-columns: repeat(4, 1fr);
 }
 
-/* --- ICON COLORS --- */
-.icon-java { color: #f89820; }
-.icon-python { color: #3776ab; }
-.icon-html { color: #e34f26; }
-.icon-css { color: #1572b6; }
-.icon-javascript { color: #f7df1e; }
-.icon-postgresql { color: #336791; }
-.icon-vs { color: #007acc; }
-.icon-android { color: #3ddc84; }
-.icon-oracle { color: #f80000; }
-.icon-git { color: #f05032; }
-.icon-github { color: #fff; }
-
-.c-img {
+.tech-logo {
   width: 4rem;
   height: 4rem;
   object-fit: contain;
+}
+
+.invert-logo {
+  filter: invert(1) brightness(1.2);
 }
 
 /* --- KEYBOARD BOXES --- */
@@ -343,7 +318,6 @@ function closeModal() {
 }
 
 .keycap {
-  font-size: 3.5rem;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -386,10 +360,7 @@ function closeModal() {
   .key {
     height: 8.5rem;
   }
-  .keycap {
-    font-size: 2.8rem;
-  }
-  .c-img {
+  .tech-logo {
     width: 3.2rem;
     height: 3.2rem;
   }
