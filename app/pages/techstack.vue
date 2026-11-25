@@ -1,20 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import {
-  Coffee,
-  Terminal,
-  FileCode2,
-  Palette,
-  Braces,
-  Database,
-  Code2,
-  Smartphone,
-  Cloud,
-  GitBranch,
-  Github,
-  Cpu,
-  X
-} from 'lucide-vue-next'
+import { Cpu, X } from 'lucide-vue-next'
 
 useHead({
   title: 'Tech Stack | Harell Diaz'
@@ -37,18 +23,16 @@ const techCategories = ref([
       {
         id: 1,
         name: 'Java',
-        iconType: 'lucide',
-        iconComponent: Coffee,
-        iconClass: 'icon-java',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-java icon-java',
         subtitle: 'Robust backend logic',
         description: 'Used for object-oriented programming and building robust backend logic.'
       },
       {
         id: 2,
         name: 'Python',
-        iconType: 'lucide',
-        iconComponent: Terminal,
-        iconClass: 'icon-python',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-python icon-python',
         subtitle: 'Scripting & Data Analysis',
         description: 'Applied for scripting, data analysis, and simplifying complex automation tasks.'
       },
@@ -72,36 +56,32 @@ const techCategories = ref([
       {
         id: 4,
         name: 'HTML',
-        iconType: 'lucide',
-        iconComponent: FileCode2,
-        iconClass: 'icon-html',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-html5 icon-html',
         subtitle: 'Web Structure',
         description: 'Creating the structural foundation of responsive web pages.'
       },
       {
         id: 5,
         name: 'CSS',
-        iconType: 'lucide',
-        iconComponent: Palette,
-        iconClass: 'icon-css',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-css3 icon-css',
         subtitle: 'Modern Layouts',
         description: 'Designing modern layouts with animations, flexbox, and grid.'
       },
       {
         id: 6,
         name: 'JavaScript',
-        iconType: 'lucide',
-        iconComponent: Braces,
-        iconClass: 'icon-javascript',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-javascript icon-javascript',
         subtitle: 'Interactivity',
         description: 'Adding interactivity and dynamic functionality.'
       },
       {
         id: 7,
         name: 'PostgreSQL',
-        iconType: 'lucide',
-        iconComponent: Database,
-        iconClass: 'icon-postgresql',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-postgresql icon-postgresql',
         subtitle: 'Relational DB',
         description: 'Advanced relational database management system.'
       }
@@ -116,18 +96,16 @@ const techCategories = ref([
       {
         id: 8,
         name: 'VS Code',
-        iconType: 'lucide',
-        iconComponent: Code2,
-        iconClass: 'icon-vs',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-visual-studio icon-vs',
         subtitle: 'Main Code Editor',
         description: 'Primary code editor for development.'
       },
       {
         id: 9,
         name: 'Android Studio',
-        iconType: 'lucide',
-        iconComponent: Smartphone,
-        iconClass: 'icon-android',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-android icon-android',
         subtitle: 'Mobile Dev',
         description: 'IDE for high-performance Android applications.'
       },
@@ -143,27 +121,24 @@ const techCategories = ref([
       {
         id: 11,
         name: 'Oracle APEX',
-        iconType: 'lucide',
-        iconComponent: Cloud,
-        iconClass: 'icon-oracle',
+        iconType: 'boxicon',
+        iconClass: 'bx bx-cloud icon-oracle',
         subtitle: 'Low-Code Platform',
         description: 'Low-code platform for building enterprise database apps.'
       },
       {
         id: 12,
         name: 'Git',
-        iconType: 'lucide',
-        iconComponent: GitBranch,
-        iconClass: 'icon-git',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-git icon-git',
         subtitle: 'Version Control',
         description: 'Version control and tracking history of changes.'
       },
       {
         id: 13,
         name: 'GitHub',
-        iconType: 'lucide',
-        iconComponent: Github,
-        iconClass: 'icon-github',
+        iconType: 'boxicon',
+        iconClass: 'bx bxl-github icon-github',
         subtitle: 'Collaboration',
         description: 'Hosting repositories, cloud backup, and code collaboration.'
       }
@@ -215,12 +190,7 @@ function closeModal() {
         >
           <!-- ICON / IMAGE -->
           <div class="keycap">
-            <component
-              v-if="item.iconType === 'lucide'"
-              :is="item.iconComponent"
-              class="w-12 h-12 md:w-14 md:h-14"
-              :class="item.iconClass"
-            />
+            <i v-if="item.iconType === 'boxicon'" :class="item.iconClass"></i>
             <img 
               v-else-if="item.iconType === 'image'" 
               :src="item.imageSrc" 
@@ -258,12 +228,7 @@ function closeModal() {
 
         <div v-if="selectedItem" class="text-center mt-2">
           <div class="modal-icon-wrap">
-            <component
-              v-if="selectedItem.iconType === 'lucide'"
-              :is="selectedItem.iconComponent"
-              class="w-12 h-12"
-              :class="selectedItem.iconClass"
-            />
+            <i v-if="selectedItem.iconType === 'boxicon'" :class="[selectedItem.iconClass, 'text-5xl']"></i>
             <img 
               v-else-if="selectedItem.iconType === 'image'" 
               :src="selectedItem.imageSrc" 
